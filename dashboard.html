@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard</title>
+    <link rel="stylesheet" href="static/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Super Admin Dashboard</h1>
+            <button class="logoutbtn" id="logoutButton" onclick="window.location.href='index.html'">Logout</button>        </header>
+
+        <div class="user-management">
+            <!-- Left Side: Existing Users List -->
+            <div class="user-list">
+                <h2>Existing Users</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>UserName</th>
+                            <th>Role</th>
+                            <th>Branch</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTable">
+                        <!-- Users will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Right Side: User Management -->
+            <div class="user-actions">
+                <!-- Add User Section -->
+                <div class="add-user">
+                    <h2>Add User</h2>
+                    <form id="addUserForm">
+                        <input type="text" id="userName" placeholder="UserName" required>
+                        <input type="text" id="password" placeholder="Password" required>
+
+                        <input type="email" id="userEmail" placeholder="Email" required>
+                        <select id="userRole" required>
+                            <option value="Principal">Principal</option>
+                            <option value="HOD">HOD</option>
+                            <option value="Faculty">Faculty</option>
+                            <option value="Student">Student</option>
+                        </select>
+                        <div class="branch-section">
+                            <select id="userBranch" required>
+                                
+                            </select>
+                            <button type="button" id="addBranchButton">Add Branch</button>
+                            <button type="button" id="removeBranchButton">Remove Branch</button>
+                        </div>
+                        <button type="submit">Add User</button>
+                    </form>
+                </div>
+
+                <!-- Remove User Section -->
+                <div class="remove-user">
+                    <h2>Remove User</h2>
+                    <form id="removeUserForm">
+                        <input type="email" id="removeUserInput" placeholder="Enter UserName" required>
+                        <button type="button" id="removeUserButton">Remove User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to the external JavaScript file -->
+    <script src="static/dashboard.js"></script>
+</body>
+</html>

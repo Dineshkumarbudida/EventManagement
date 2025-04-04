@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= $_SESSION['csrf_token'] ?>">
+    <title>HOD Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <style>
+        /* Body with Gradient Background */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+        }
+
+        /* Banner Section */
+        #banner {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #020b15, #0056b3);
+        }
+
+        #banner img {
+            width: 90%;
+            height: 80%;
+            margin-top: 5px;
+        }
+
+        #banner h1 {
+            position: absolute;
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Container */
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HOD Details */
+        .hod-details {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .hod-details h2 {
+            margin: 0;
+            color: #333;
+            font-size: 1.8rem;
+        }
+
+        .hod-details p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .hod-details p i {
+            margin-right: 10px;
+            color: #0056b3;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filters select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+            background-color: white;
+            font-size: 1rem;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .filters select:hover {
+            border-color: #0056b3;
+        }
+
+        /* Faculty Dropdown */
+        .faculty-select {
+            margin-bottom: 20px;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+        }
+
+        /* Events Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #020b15;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        table td a {
+            color: #0056b3;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        table td a:hover {
+            color: #003366;
+        }
+
+        /* Upload Button */
+        .upload-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .upload-button button {
+            padding: 10px 20px;
+            background-color: #020b15;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-button button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(245, 236, 236, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        #remove-media-div {
+            margin: 10px 0;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            background-color: #020b15;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .close-button {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Banner Section -->
+    <div id="banner">
+        <img src="https://sis.idealtech.edu.in/iitkresults/ideal_logo%20A+.jpg" alt="College Banner">
+    </div>
+
+    <div class="container">
+        <h1>HOD Dashboard</h1>
+        <div class="hod-details">
+            <p><i class="fas fa-user"></i>Name: <span id="hod-name"></span></p>
+            <p><i class="fas fa-building"></i>Branch: <span id="hod-branch"></span></p>
+        </div>
+
+        <div class="faculty-select">
+            <label for="facultyDropdown"><strong>Select Faculty:</strong></label>
+            <select id="facultyDropdown" name="faculty" multiple style="width: 100%"></select>
+        </div>
+
+        <div class="filters">
+            <select id="filter-select">
+                <option value="my-uploads">My Uploads</option>
+                <option value="faculty-uploads">Faculty Uploads</option>
+                <option value="faculty-collaboration">Collaboration</option>
+                <option value="all-faculties-common">All Faculties Common</option>
+                <option value="common-folder">Common Folder</option>
+            </select>
+            
+        </div>
+
+        <table id="events-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Description</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Media</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="upload-button">
+            <button onclick="openForm()">Upload Event</button>
+        </div>
+    </div>
+
+    <!-- Event Form Modal -->
+    <div id="event-form-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeForm()">&times;</span>
+            <h2 id="form-title">Upload Event</h2>
+            <form id="event-form">
+                <label for="event-name">Event Name:</label>
+                <input type="text" id="event-name" name="event_name" required>
+
+                <label for="event-description">Description:</label>
+                <textarea id="event-description"  name="description"></textarea>
+
+                <label for="from-date">From Date:</label>
+                <input type="date" id="from-date" name="start_date" >
+
+                <label for="to-date">To Date:</label>
+                <input type="date" id="to-date" name="end_date">
+
+                <!-- Media Sections -->
+                <div id="existing-media" style="display: none;">
+                    <label>Existing Media:</label>
+                    <a id="media-link" target="_blank">View Media</a>
+                </div>
+
+                <div id="remove-media-div" style="display: none;">
+                    <label>
+                        <input type="checkbox" id="remove-media" name="remove_media"> Remove Media
+                    </label>
+                </div>
+
+                <label for="upload-media">Upload Media:</label>
+                <input type="file" id="upload-media" name="media[]" multiple accept="image/*, video/*">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="static/hod.js">
+      
+
+    </script>
+</body>
+</html>
